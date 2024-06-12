@@ -9,7 +9,11 @@ const line = require('@line/bot-sdk');
 let UserName , UserID ;
 let OrderUserName , OrderUserID; //儲存目前要送訂單的人的資訊
 let ServerCanOrder=true;       //一次只能一人訂餐
-
+const RoomNumber = 3; //預設3間房間
+let iislogin = new Array(RoomNumber).fill(false);
+//每間房間都應有相對應之預設密碼儲存於Database
+let passcode,Roomnum,password;
+let OrderSend ; //send 車子訂單資訊
 // 用於辨識Line Channel的資訊
 var bot = linebot({
   channelId: '2005586122',
@@ -17,19 +21,19 @@ var bot = linebot({
   channelAccessToken: 'LrkyVVTLBV8QnMUiA/SaLDqvq916OhpekbUttrkbfj2JkLakasIBm0u6m3G/sFcpxNc7tfRCCsBvg7+SOVaSK65ABfForE6jijv/Xw5mElKIL4Tvy+3RxZHL3cMOGuentjX4thMuBqFhzl8xyLCTgAdB04t89/1O/w1cDnyilFU='
 });
 
-//const linebotParser =bot.parser();
-//var jsonParser = bodyParser.json();
-//const client = new line.Client({
-  //channelAccessToken: 'LrkyVVTLBV8QnMUiA/SaLDqvq916OhpekbUttrkbfj2JkLakasIBm0u6m3G/sFcpxNc7tfRCCsBvg7+SOVaSK65ABfForE6jijv/Xw5mElKIL4Tvy+3RxZHL3cMOGuentjX4thMuBqFhzl8xyLCTgAdB04t89/1O/w1cDnyilFU='
-//})
-//app.post('/linewebhook',linebotParser);
+const linebotParser =bot.parser();
+var jsonParser = bodyParser.json();
+const client = new line.Client({
+  channelAccessToken: 'LrkyVVTLBV8QnMUiA/SaLDqvq916OhpekbUttrkbfj2JkLakasIBm0u6m3G/sFcpxNc7tfRCCsBvg7+SOVaSK65ABfForE6jijv/Xw5mElKIL4Tvy+3RxZHL3cMOGuentjX4thMuBqFhzl8xyLCTgAdB04t89/1O/w1cDnyilFU='
+})
+app.post('/linewebhook',linebotParser);// linebot webhook
 
 //使用者加入好友
-/*bot.on('follow',function(event){
+bot.on('follow',function(event){
   client.getProfile(event.source.userId)
 		.then((profile) => {
 			UserID = event.source.userId;
-			UserName = profi  
+			UserName = profile.displayName;  
       console.log(profile.displayName); //顯示使用者名字
       console.log(profile.userId);
       console.log(profile.pictureUrl); // 顯示使用者大頭照網址
@@ -40,21 +44,32 @@ var bot = linebot({
 			// error handling
 		});
 	event.reply('需要點餐請先登入，登入格式為：ROOM房號-密碼\n密碼可於您的房卡上找到！');
-})*/
+})
 //test
 bot.on('message', function (event) {
   // event.message.text是使用者傳給bot的訊息
   // 使用event.reply(要回傳的訊息)方法可將訊息回傳給使用者
   var replyMsg = `Hello你剛才說的是:${event.message.text}`;
-  event.reply(event.message.text).then(function (data) {
+  event.reply(replyMsg).then(function (data) {
     // 當訊息成功回傳後的處理
   }).catch(function (error) {
     // 當訊息回傳失敗後的處理
   });
 });
+/*
+
+*/
 
 
 
-app.listen(process.env.PORT||30,function (){
+
+
+
+
+
+
+
+
+app.listen(process.env.PORT||8080,function (){
     console.log("server is running at localhsot");
 })
